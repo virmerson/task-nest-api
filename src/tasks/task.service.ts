@@ -2,14 +2,14 @@ import { Injectable, OnModuleInit } from "@nestjs/common";
 import { Task } from "./task.model";
 
 @Injectable()
-export class TaskService implements OnModuleInit {
+export class TaskService {
 
     private tasks: Task[] = [];
 
-    onModuleInit() {
-        //     if (this.tasks.length === 0)
-        //         this.initTasks()
-    }
+    // onModuleInit() {
+    //     //     if (this.tasks.length === 0)
+    //     //         this.initTasks()
+    // }
 
     // initTasks() {
     //     Array.from({ length: 10 }, (_, index) => {
