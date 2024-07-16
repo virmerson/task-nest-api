@@ -8,28 +8,26 @@ export class TaskController {
 
     }
     @Get()
-    getAllTasks(): Task[] {
+    async getAllTasks(): Promise<Task[]> {
         return this.taskService.getAllTasks()
     }
 
     @Get(':id')
-    getTaskById(@Param('id') id: string): Task {
-        return this.taskService.getTaskById(+id)
+    async getTaskById(@Param('id') id: string): Promise<Task> {
+        return this.taskService.getTaskById(id)
     }
+
     @Patch(':id')
-    updateTask(@Param('id') id: string, @Body() taskUpdate: Partial<Task>): Task {
-        return this.taskService.updateTask(+id, taskUpdate)
+    async updateTask(@Param('id') id: string, @Body() taskUpdate: Partial<Task>): Promise<Task> {
+        return this.taskService.updateTask(id, taskUpdate)
     }
 
     @Delete(':id')
-    deleteTask(@Param('id') id: string): void {
-        this.taskService.deleteTask(+id)
+    async deleteTask(@Param('id') id: string): Promise<void> {
+        this.taskService.deleteTask(id)
     }
     @Post()
-    createTask(@Body('title') title: string): Task {
+    async createTask(@Body('title') title: string): Promise<Task> {
         return this.taskService.createTask(title)
     }
-
-
-
 }
