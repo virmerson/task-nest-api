@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Task } from "./task.model";
 import { Repository } from "typeorm";
+import { ObjectId } from "mongodb";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
@@ -18,22 +19,27 @@ export class TaskService {
     }
 
     async updateTask(id: string, taskUpdate: Partial<Task>): Promise<Task> {
-        const result = await this.taskRepository.update(id, taskUpdate)
-        if (result.affected === 0) {
-            throw new Error('Task not found')
-        }
+        try {
+            const result = await this.taskRepository.update(new ObjectId(id), taskUpdate)
+            if (result.affected === 0) {
+                throw new Error('Task not found')
+            }
 
-        const updatedTask = await this.taskRepository.findOne({ where: { id: Number(id) } });
-        if (!updatedTask) {
-            // In case the task still cannot be found after update
-            throw new Error('Task not found');
+            const updatedTask = await this.taskRepository.findOne({ where: { _id: new ObjectId(id) } });
+            if (!updatedTask) {
+                // In case the task still cannot be found after update
+                throw new Error('Task not found');
+            }
+            return updatedTask;
+        } catch (error) {
+            console.error(`Error updating task with id ${id}`, error)
+            throw error
         }
-        return updatedTask;
     }
 
     async getTaskById(id: string): Promise<Task> {
 
-        const task = await this.taskRepository.findOne({ where: { id: Number(id) } })
+        const task = await this.taskRepository.findOne({ where: { _id: new ObjectId(id) } })
         if (!task) {
             throw new Error('Task not found')
         }
